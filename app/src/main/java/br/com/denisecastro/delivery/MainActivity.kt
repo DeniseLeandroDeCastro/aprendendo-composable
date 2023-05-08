@@ -7,18 +7,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import br.com.denisecastro.delivery.ui.theme.DeliveryTheme
 import br.com.denisecastro.delivery.ui.theme.Purple200
 import br.com.denisecastro.delivery.ui.theme.Purple500
@@ -41,28 +47,55 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun ProductItem() {
-    Column(
-        Modifier
-            .width(200.dp)
-            .height(250.dp)) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .background(brush = Brush.horizontalGradient(colors = listOf(
-                    Purple500, Teal200
-                )))
-        )
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = "Imagem do produto",
+    Surface(
+        Modifier.padding(8.dp),
+        shape = RoundedCornerShape(15.dp),
+        elevation = 4.dp) {
+        Column(
             Modifier
-                .offset(y = (-50).dp)
-                .clip(shape = CircleShape)
-                .align(CenterHorizontally)
-        )
-        Text(text = "Texto 1")
-        Text(text = "Texto 2")
+                .width(200.dp)
+                .heightIn(250.dp, 300.dp)
+        ) {
+            val imageSize = 100.dp
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(imageSize)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Purple500, Teal200
+                            )
+                        )
+                    )
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    contentDescription = "Imagem do produto",
+                    Modifier
+                        .size(imageSize)
+                        .offset(y = imageSize/2)
+                        .clip(shape = CircleShape)
+                        .align(BottomCenter)
+                )
+            }
+            Spacer(modifier = Modifier.height(imageSize/2))
+            Column(Modifier.padding(16.dp)) {
+                Text(
+                    text = LoremIpsum(50).values.first(),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight(700),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "R$ 14,99",
+                    Modifier.padding(top = 8.dp),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(400)
+                )
+            }
+        }
     }
 }
 
