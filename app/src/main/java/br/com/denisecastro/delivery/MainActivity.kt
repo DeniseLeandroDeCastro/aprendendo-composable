@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,20 +26,39 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.denisecastro.delivery.extensions.toBrazilianCuency
+import br.com.denisecastro.delivery.model.Product
 import br.com.denisecastro.delivery.ui.theme.DeliveryTheme
 import br.com.denisecastro.delivery.ui.theme.Purple200
 import br.com.denisecastro.delivery.ui.theme.Purple500
 import br.com.denisecastro.delivery.ui.theme.Teal200
+import java.math.BigDecimal
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DeliveryTheme {
-                Surface {
-                    ProductsSection()
-                }
+            App()
+        }
+    }
+}
+
+@Composable
+fun App() {
+    DeliveryTheme {
+        Surface {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Spacer(Modifier)
+                ProductsSection()
+                ProductsSection()
+                ProductsSection()
+                Spacer(Modifier)
             }
         }
     }
@@ -49,28 +69,43 @@ fun ProductsSection() {
     Column {
         Text(
             text = "Promoções",
-            Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+            Modifier.padding(start = 16.dp, end = 16.dp),
             fontSize = 20.sp,
             fontWeight = FontWeight(400)
         )
         Row(
             Modifier
-                .padding(top = 8.dp, bottom = 16.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth()
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(Modifier)
-            ProductItem()
-            ProductItem()
-            ProductItem()
+            ProductItem(
+                Product(
+                    name = "Hambúrguer",
+                    price = BigDecimal("12.99"),
+                    image = R.drawable.hamburguer)
+            )
+            ProductItem(
+                Product(
+                    name = "Pizza",
+                    price = BigDecimal("28.99"),
+                    image = R.drawable.pizza)
+            )
+            ProductItem(
+                Product(
+                    name = "Batata frita",
+                    price = BigDecimal("8.99"),
+                    image = R.drawable.batata_frita)
+            )
             Spacer(Modifier)
         }
     }
 }
 
 @Composable
-fun ProductItem() {
+fun ProductItem(product: Product) {
     Surface(
         shape = RoundedCornerShape(15.dp),
         elevation = 4.dp
@@ -94,26 +129,28 @@ fun ProductItem() {
                     )
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    painter = painterResource(id = product.image),
                     contentDescription = "Imagem do produto",
                     Modifier
                         .size(imageSize)
                         .offset(y = imageSize / 2)
                         .clip(shape = CircleShape)
-                        .align(BottomCenter)
+                        .align(BottomCenter),
+                    contentScale = ContentScale.FillBounds
+
                 )
             }
             Spacer(modifier = Modifier.height(imageSize / 2))
             Column(Modifier.padding(16.dp)) {
                 Text(
-                    text = LoremIpsum(50).values.first(),
+                    text = product.name,
                     fontSize = 18.sp,
                     fontWeight = FontWeight(700),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "R$ 14,99",
+                    text = product.price.toBrazilianCuency(),
                     Modifier.padding(top = 8.dp),
                     fontSize = 14.sp,
                     fontWeight = FontWeight(400)
@@ -121,6 +158,12 @@ fun ProductItem() {
             }
         }
     }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun AppPreview() {
+    App()
 }
 
 @Preview(showBackground = true)
@@ -132,7 +175,11 @@ private fun ProductsSectionPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ProductItemPreview() {
-    ProductItem()
+    ProductItem(Product(
+        name = LoremIpsum(50).values.first(),
+        price = BigDecimal("14.99"),
+        image = R.drawable.ic_launcher_background
+    ))
 }
 
 
