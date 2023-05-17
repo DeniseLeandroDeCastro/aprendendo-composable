@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.denisecastro.delivery.extensions.toBrazilianCuency
 import br.com.denisecastro.delivery.model.Product
+import br.com.denisecastro.delivery.ui.components.ProductItem
 import br.com.denisecastro.delivery.ui.theme.DeliveryTheme
 import br.com.denisecastro.delivery.ui.theme.Purple200
 import br.com.denisecastro.delivery.ui.theme.Purple500
@@ -104,62 +105,6 @@ fun ProductsSection() {
     }
 }
 
-@Composable
-fun ProductItem(product: Product) {
-    Surface(
-        shape = RoundedCornerShape(15.dp),
-        elevation = 4.dp
-    ) {
-        Column(
-            Modifier
-                .width(200.dp)
-                .heightIn(250.dp, 300.dp)
-        ) {
-            val imageSize = 100.dp
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(imageSize)
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                Purple500, Teal200
-                            )
-                        )
-                    )
-            ) {
-                Image(
-                    painter = painterResource(id = product.image),
-                    contentDescription = "Imagem do produto",
-                    Modifier
-                        .size(imageSize)
-                        .offset(y = imageSize / 2)
-                        .clip(shape = CircleShape)
-                        .align(BottomCenter),
-                    contentScale = ContentScale.FillBounds
-
-                )
-            }
-            Spacer(modifier = Modifier.height(imageSize / 2))
-            Column(Modifier.padding(16.dp)) {
-                Text(
-                    text = product.name,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight(700),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = product.price.toBrazilianCuency(),
-                    Modifier.padding(top = 8.dp),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(400)
-                )
-            }
-        }
-    }
-}
-
 @Preview(showSystemUi = true)
 @Composable
 fun AppPreview() {
@@ -172,14 +117,6 @@ private fun ProductsSectionPreview() {
     ProductsSection()
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun ProductItemPreview() {
-    ProductItem(Product(
-        name = LoremIpsum(50).values.first(),
-        price = BigDecimal("14.99"),
-        image = R.drawable.ic_launcher_background
-    ))
-}
+
 
 
